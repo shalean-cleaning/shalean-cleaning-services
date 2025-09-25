@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBooking } from '@/providers/booking-provider';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { generateServiceSlug } from '@/lib/pricing';
+import { generateMetadata, generateStaticParams } from './metadata';
+import { use } from 'react';
 
 interface Service {
   id: string;
@@ -23,9 +25,16 @@ interface Service {
   is_active: boolean;
 }
 
-export default function ServiceSelectionPage() {
+interface ServicePageProps {
+  params: Promise<{
+    serviceSlug: string;
+  }>;
+}
+
+export default function ServicePage({ params }: ServicePageProps) {
   const { bookingState, updateBookingState } = useBooking();
   const router = useRouter();
+  const resolvedParams = use(params);
 
   const { data: services, isLoading } = useQuery({
     queryKey: ['services'],
@@ -36,13 +45,21 @@ export default function ServiceSelectionPage() {
     },
   });
 
+  // Find the service that matches the slug
+  const currentService = services?.find(service => 
+    generateServiceSlug(service.name) === resolvedParams.serviceSlug
+  );
+
   const handleServiceSelect = (service: Service) => {
     updateBookingState({ service });
-    // Redirect to service-specific URL for better SEO
+    // Redirect to details page with service in URL
     const serviceSlug = generateServiceSlug(service.name);
-    router.push(`/booking/service/${serviceSlug}`);
+    router.push(`/booking/service/${serviceSlug}/details`);
   };
 
+  const handleBackToServices = () => {
+    router.push('/booking/service');
+  };
 
   if (isLoading) {
     return (
@@ -54,15 +71,80 @@ export default function ServiceSelectionPage() {
     );
   }
 
+  if (!currentService) {
+    return (
+      <BookingLayout currentStep={1}>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center py-16">
+            <h1 className="text-2xl font-bold mb-4">Service Not Found</h1>
+            <p className="text-muted-foreground mb-6">
+              The service you're looking for doesn't exist.
+            </p>
+            <Button onClick={handleBackToServices} variant="outline">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Services
+            </Button>
+          </div>
+        </div>
+      </BookingLayout>
+    );
+  }
+
   return (
     <BookingLayout currentStep={1}>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Choose Your Service</h1>
+          <Button 
+            variant="outline" 
+            onClick={handleBackToServices}
+            className="mb-4"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to All Services
+          </Button>
+          <h1 className="text-3xl font-bold mb-2">{currentService.name}</h1>
           <p className="text-muted-foreground">
-            Select the cleaning service that best fits your needs
+            {currentService.description}
           </p>
         </div>
+
+        {/* Service Details */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              Service Details
+              <Badge variant="secondary">
+                R{currentService.base_price.toLocaleString()}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Duration</p>
+                <p className="text-lg">
+                  {Math.floor(currentService.duration_minutes / 60)}h {currentService.duration_minutes % 60}m
+                </p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Base Price</p>
+                <p className="text-lg font-semibold">R{currentService.base_price.toLocaleString()}</p>
+              </div>
+              {currentService.per_bedroom_price && (
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Per Bedroom</p>
+                  <p className="text-lg">+R{currentService.per_bedroom_price.toLocaleString()}</p>
+                </div>
+              )}
+              {currentService.per_bathroom_price && (
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Per Bathroom</p>
+                  <p className="text-lg">+R{currentService.per_bathroom_price.toLocaleString()}</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Service Selection */}
         <div className="mb-8">
@@ -113,10 +195,10 @@ export default function ServiceSelectionPage() {
               className="gap-2"
               onClick={() => {
                 const serviceSlug = generateServiceSlug(bookingState.service!.name);
-                router.push(`/booking/service/${serviceSlug}`);
+                router.push(`/booking/service/${serviceSlug}/details`);
               }}
             >
-              Continue to Service Details
+              Continue to Details
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>

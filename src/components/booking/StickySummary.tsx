@@ -47,8 +47,8 @@ interface StickySummaryProps {
 export function StickySummary({ bookingSummary, currentStep, user }: StickySummaryProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Only show on steps 1-4
-  if (currentStep > 4) {
+  // Only show on steps 1-5 (before payment)
+  if (currentStep > 5) {
     return null;
   }
 

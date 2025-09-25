@@ -13,16 +13,25 @@ import { PaymentForm } from '@/components/payment/PaymentForm';
 import { PaymentSuccess } from '@/components/payment/PaymentSuccess';
 import { formatPrice } from '@/lib/pricing';
 import type { PaymentResult, PaymentError } from '@/lib/paystack';
+import { use } from 'react';
 
-export default function ReviewPage() {
+interface ServiceReviewPageProps {
+  params: Promise<{
+    serviceSlug: string;
+  }>;
+}
+
+export default function ServiceReviewPage({ params }: ServiceReviewPageProps) {
   const router = useRouter();
   const { bookingState } = useBooking();
   const { user, loading } = useAuth();
+  const resolvedParams = use(params);
   const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
 
   // Debug logging
-  console.log('ReviewPage - User:', user);
-  console.log('ReviewPage - Loading:', loading);
+  console.log('ServiceReviewPage - User:', user);
+  console.log('ServiceReviewPage - Loading:', loading);
+  console.log('ServiceReviewPage - Booking State:', bookingState);
 
   const handlePaymentSuccess = (result: PaymentResult) => {
     setPaymentResult(result);
@@ -112,7 +121,7 @@ export default function ReviewPage() {
 
   // Check if booking is complete
   if (!bookingState.service || !bookingState.scheduledDate || !bookingState.scheduledTime || !bookingState.address) {
-    // If user is logged in, show booking review instead of "Start Booking" button
+    // If user is logged in, show booking review for completed steps
     if (user) {
       return (
         <div className="min-h-screen bg-background">
@@ -137,16 +146,111 @@ export default function ReviewPage() {
                     <CardTitle>Booking Summary</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Alert>
-                      <XCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        Welcome! To complete your booking, please start by selecting a service and providing your booking details.
-                      </AlertDescription>
-                    </Alert>
-                    <div className="text-center py-8">
-                      <p className="text-muted-foreground mb-4">Your booking details will appear here once completed.</p>
+                    {/* Step 1: Service Selection */}
+                    {bookingState.service && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold">
+                            ✓
+                          </div>
+                          <h3 className="text-lg font-semibold">Step 1: Service Selection</h3>
+                        </div>
+                        <div className="ml-8 space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm font-medium text-muted-foreground">Service</span>
+                            <span className="font-semibold">{bookingState.service.name}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm font-medium text-muted-foreground">Duration</span>
+                            <span>{Math.floor(bookingState.service.duration_minutes / 60)}h {bookingState.service.duration_minutes % 60}m</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm font-medium text-muted-foreground">Base Price</span>
+                            <span>{formatPrice(bookingState.service.base_price)}</span>
+                          </div>
+                          {bookingState.service.per_bedroom_price && (
+                            <div className="flex justify-between">
+                              <span className="text-sm font-medium text-muted-foreground">Per Bedroom</span>
+                              <span>+{formatPrice(bookingState.service.per_bedroom_price)}</span>
+                            </div>
+                          )}
+                          {bookingState.service.per_bathroom_price && (
+                            <div className="flex justify-between">
+                              <span className="text-sm font-medium text-muted-foreground">Per Bathroom</span>
+                              <span>+{formatPrice(bookingState.service.per_bathroom_price)}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Step 2: Service Details */}
+                    {(bookingState.bedrooms > 0 || bookingState.bathrooms > 0 || bookingState.address) && (
+                      <div className="space-y-4">
+                        <Separator />
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold">
+                            ✓
+                          </div>
+                          <h3 className="text-lg font-semibold">Step 2: Service Details</h3>
+                        </div>
+                        <div className="ml-8 space-y-2">
+                          {(bookingState.bedrooms > 0 || bookingState.bathrooms > 0) && (
+                            <div className="flex justify-between">
+                              <span className="text-sm font-medium text-muted-foreground">Property Size</span>
+                              <span>{bookingState.bedrooms} bedroom{bookingState.bedrooms !== 1 ? 's' : ''}, {bookingState.bathrooms} bathroom{bookingState.bathrooms !== 1 ? 's' : ''}</span>
+                            </div>
+                          )}
+                          {bookingState.address && (
+                            <div className="space-y-1">
+                              <div className="flex justify-between">
+                                <span className="text-sm font-medium text-muted-foreground">Address</span>
+                              </div>
+                              <div className="text-sm">
+                                <p>{bookingState.address}</p>
+                                {bookingState.suburb && (
+                                  <p className="text-muted-foreground">
+                                    {bookingState.suburb.name}, {bookingState.suburb.region.name}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Remaining Steps */}
+                    <Separator />
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center text-sm font-semibold">
+                          3
+                        </div>
+                        <h3 className="text-lg font-semibold text-muted-foreground">Step 3: Schedule & Time</h3>
+                      </div>
+                      <div className="ml-8">
+                        <p className="text-sm text-muted-foreground">Select your preferred date and time</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center text-sm font-semibold">
+                          4
+                        </div>
+                        <h3 className="text-lg font-semibold text-muted-foreground">Step 4: Payment</h3>
+                      </div>
+                      <div className="ml-8">
+                        <p className="text-sm text-muted-foreground">Complete your booking with secure payment</p>
+                      </div>
+                    </div>
+
+                    <Separator />
+                    <div className="text-center py-4">
+                      <p className="text-muted-foreground mb-4">Complete the remaining steps to proceed with payment</p>
                       <Button onClick={() => router.push('/booking/service')}>
-                        Complete Booking Details
+                        Continue Booking
                       </Button>
                     </div>
                   </CardContent>
@@ -165,13 +269,13 @@ export default function ReviewPage() {
           <div className="max-w-2xl mx-auto">
             <Card>
               <CardHeader>
-                <CardTitle>Start Your Booking</CardTitle>
+                <CardTitle>Complete Your Booking</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Alert>
                   <XCircle className="h-4 w-4" />
                   <AlertDescription>
-                    Welcome! To complete your booking, please start by selecting a service and providing your booking details.
+                    Please complete all booking steps before proceeding to payment.
                   </AlertDescription>
                 </Alert>
                 <div className="flex gap-4">
@@ -304,8 +408,6 @@ export default function ReviewPage() {
                     <span>Service fee (10%)</span>
                     <span>{formatPrice(bookingState.pricing.serviceFee)}</span>
                   </div>
-
-                  {/* Discount will be shown when discount functionality is fully implemented */}
 
                   <Separator />
 

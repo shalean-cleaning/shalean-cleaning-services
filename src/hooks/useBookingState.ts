@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { calculatePricing, type PricingBreakdown, type Service } from '@/lib/pricing';
 import type { AuthUser } from '@/lib/auth';
 
@@ -53,6 +53,32 @@ const initialBookingState: BookingState = {
 export function useBookingState() {
   const [bookingState, setBookingState] = useState<BookingState>(initialBookingState);
 
+  // Load booking state from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedState = localStorage.getItem('booking-state');
+      if (savedState) {
+        try {
+          const parsedState = JSON.parse(savedState);
+          // Convert date strings back to Date objects
+          if (parsedState.scheduledDate) {
+            parsedState.scheduledDate = new Date(parsedState.scheduledDate);
+          }
+          setBookingState(parsedState);
+        } catch (error) {
+          console.error('Error loading booking state from localStorage:', error);
+        }
+      }
+    }
+  }, []);
+
+  // Save booking state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('booking-state', JSON.stringify(bookingState));
+    }
+  }, [bookingState]);
+
   const updateBookingState = useCallback((updates: Partial<BookingState>) => {
     setBookingState(prevState => {
       const newState = { ...prevState, ...updates };
@@ -80,6 +106,9 @@ export function useBookingState() {
 
   const resetBookingState = useCallback(() => {
     setBookingState(initialBookingState);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('booking-state');
+    }
   }, []);
 
   const addExtra = useCallback((extra: { id: string; name: string; price: number }) => {

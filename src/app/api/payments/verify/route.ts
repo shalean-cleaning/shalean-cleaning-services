@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase-client';
-import type { PaymentResult, PaymentError } from '@/lib/paystack';
+import type { PaymentResult } from '@/lib/paystack';
 
 export async function POST(request: NextRequest) {
   try {

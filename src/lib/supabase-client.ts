@@ -7,14 +7,20 @@ const createSafeSupabaseClient = () => {
   const url = config.supabase.url;
   const anonKey = config.supabase.anonKey;
   
-  // If environment variables are not set, return a mock client
-  if (!url || !anonKey) {
-    console.warn('Supabase environment variables not set. Using mock client.');
+  // If environment variables are not set or empty, return a mock client
+  if (!url || !anonKey || url === '' || anonKey === '' || url === 'http://127.0.0.1:54321') {
+    console.warn('Supabase not configured or local instance not running. Using mock client.');
     return {
       auth: {
         getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-        signIn: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
-        signUp: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
+        signInWithPassword: () => Promise.resolve({ 
+          data: { user: null }, 
+          error: { message: 'Supabase not configured' } 
+        }),
+        signUp: () => Promise.resolve({ 
+          data: { user: null }, 
+          error: { message: 'Supabase not configured' } 
+        }),
         signOut: () => Promise.resolve({ error: null }),
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
       },

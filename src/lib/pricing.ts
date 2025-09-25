@@ -73,9 +73,9 @@ export function calculatePricing(details: BookingDetails): PricingBreakdown {
 }
 
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-ZA', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'ZAR',
   }).format(price);
 }
 

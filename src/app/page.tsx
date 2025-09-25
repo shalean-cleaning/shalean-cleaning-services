@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { HeroImage } from '@/components/HeroImage';
 import { 
   CheckCircle, 
   Shield, 
@@ -48,19 +49,7 @@ export default function Home() {
             </div>
           </div>
           <div className="relative">
-            <div className="bg-primary/10 rounded-lg p-8 text-center">
-              <Badge className="absolute top-4 right-4 bg-green-500">Live Booking</Badge>
-              <div className="text-6xl font-bold text-primary mb-4">Shalean</div>
-              <p className="text-muted-foreground mb-4">Hero Placeholder</p>
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-2xl font-bold">4.9/5</span>
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-              </div>
-            </div>
+            <HeroImage />
           </div>
         </div>
       </section>

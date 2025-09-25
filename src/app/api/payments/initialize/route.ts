@@ -44,10 +44,9 @@ export async function POST(request: NextRequest) {
     // Try to get booking details from database, but don't fail if it doesn't exist
     // This handles cases where payment is initiated before booking is created
     let booking = null;
-    let bookingError = null;
     
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('bookings')
         .select(`
           id,
@@ -68,8 +67,7 @@ export async function POST(request: NextRequest) {
         .single();
       
       booking = data;
-      // bookingError = error; // Not used in this flow
-    } catch (err) {
+    } catch {
       // Booking doesn't exist yet, which is fine for this flow
       console.log('Booking not found in database, proceeding with payment initialization');
     }

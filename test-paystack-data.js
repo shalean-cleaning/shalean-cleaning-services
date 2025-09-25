@@ -47,7 +47,15 @@ async function testPaystackData() {
       .select('*')
       .limit(2);
     
-    // Simulate booking state
+    // Simulate booking state with proper pricing calculation
+    const basePrice = parseFloat(service.base_price);
+    const bedroomPrice = parseFloat(service.per_bedroom_price) * 3;
+    const bathroomPrice = parseFloat(service.per_bathroom_price) * 2;
+    const extrasPrice = extras.reduce((sum, extra) => sum + parseFloat(extra.price), 0);
+    const subtotal = basePrice + bedroomPrice + bathroomPrice + extrasPrice;
+    const serviceFee = subtotal * 0.1; // 10% service fee
+    const total = subtotal + serviceFee;
+
     const bookingState = {
       service: service,
       bedrooms: 3,
@@ -70,13 +78,13 @@ async function testPaystackData() {
         quantity: 1
       })),
       pricing: {
-        basePrice: parseFloat(service.base_price),
-        bedroomPrice: parseFloat(service.per_bedroom_price) * 3,
-        bathroomPrice: parseFloat(service.per_bathroom_price) * 2,
-        extrasPrice: extras.reduce((sum, extra) => sum + parseFloat(extra.price), 0),
-        subtotal: parseFloat(service.base_price) + (parseFloat(service.per_bedroom_price) * 3) + (parseFloat(service.per_bathroom_price) * 2) + extras.reduce((sum, extra) => sum + parseFloat(extra.price), 0),
-        serviceFee: 0,
-        total: parseFloat(service.base_price) + (parseFloat(service.per_bedroom_price) * 3) + (parseFloat(service.per_bathroom_price) * 2) + extras.reduce((sum, extra) => sum + parseFloat(extra.price), 0)
+        basePrice,
+        bedroomPrice,
+        bathroomPrice,
+        extrasPrice,
+        subtotal,
+        serviceFee,
+        total
       }
     };
     

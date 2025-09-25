@@ -41,35 +41,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get booking details from database
-    const { data: booking, error: bookingError } = await supabase
-      .from('bookings')
-      .select(`
-        id,
-        service_id,
-        scheduled_date,
-        scheduled_time,
-        address,
-        cleaner_id,
-        services (
-          name
-        ),
-        profiles (
-          first_name,
-          last_name
-        )
-      `)
-      .eq('id', bookingId)
-      .single();
-
-    if (bookingError || !booking) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Booking not found' 
-        },
-        { status: 404 }
-      );
+    // Try to get booking details from database, but don't fail if it doesn't exist
+    // This handles cases where payment is initiated before booking is created
+    let booking = null;
+    let bookingError = null;
+    
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .select(`
+          id,
+          service_id,
+          scheduled_date,
+          scheduled_time,
+          address,
+          cleaner_id,
+          services (
+            name
+          ),
+          profiles (
+            first_name,
+            last_name
+          )
+        `)
+        .eq('id', bookingId)
+        .single();
+      
+      booking = data;
+      bookingError = error;
+    } catch (err) {
+      // Booking doesn't exist yet, which is fine for this flow
+      console.log('Booking not found in database, proceeding with payment initialization');
     }
 
     // Generate payment reference
@@ -88,34 +90,33 @@ export async function POST(request: NextRequest) {
       reference,
       metadata: {
         bookingId,
-        serviceName: booking.services?.name || 'Cleaning Service',
-        customerId: booking.profiles?.first_name ? `${booking.profiles.first_name} ${booking.profiles.last_name}` : customerName,
-        cleanerId: booking.cleaner_id || undefined,
-        scheduledDate: booking.scheduled_date,
-        scheduledTime: booking.scheduled_time,
-        address: booking.address,
+        serviceName: booking?.services?.name || 'Cleaning Service',
+        customerId: booking?.profiles?.first_name ? `${booking.profiles.first_name} ${booking.profiles.last_name}` : customerName,
+        cleanerId: booking?.cleaner_id || undefined,
+        scheduledDate: booking?.scheduled_date || '',
+        scheduledTime: booking?.scheduled_time || '',
+        address: booking?.address || '',
       },
     };
 
-    // Store payment reference in database
-    const { error: updateError } = await supabase
-      .from('bookings')
-      .update({ 
-        payment_reference: reference,
-        payment_status: 'pending',
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', bookingId);
+    // Store payment reference in database (only if booking exists)
+    if (booking) {
+      const { error: updateError } = await supabase
+        .from('bookings')
+        .update({ 
+          payment_reference: reference,
+          payment_status: 'pending',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', bookingId);
 
-    if (updateError) {
-      console.error('Error updating booking with payment reference:', updateError);
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Failed to update booking with payment reference' 
-        },
-        { status: 500 }
-      );
+      if (updateError) {
+        console.error('Error updating booking with payment reference:', updateError);
+        // Don't fail the payment initialization if we can't update the booking
+        console.log('Continuing with payment initialization despite booking update error');
+      }
+    } else {
+      console.log('Booking not found in database, skipping payment reference update');
     }
 
     return NextResponse.json({

@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
 
+interface SuburbData {
+  id: string;
+  name: string;
+  region_id: string;
+  is_active: boolean;
+  regions: {
+    id: string;
+    name: string;
+    description: string;
+  } | null;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -35,7 +47,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform suburbs to areas format for PRD compliance
-    const areas = (data || []).map(suburb => ({
+    const suburbs: SuburbData[] = data || [];
+    const areas = suburbs.map(suburb => ({
       id: suburb.id,
       slug: suburb.name.toLowerCase().replace(/\s+/g, '-'),
       name: suburb.name,

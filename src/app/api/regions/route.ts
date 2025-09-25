@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
 
 // Mock data for South African provinces with focus on Western Cape
@@ -59,7 +59,7 @@ const mockRegions = [
   }
 ];
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Try to fetch from Supabase first
     const { data: regions, error } = await supabase

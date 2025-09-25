@@ -11,7 +11,7 @@ interface UsePaystackOptions {
   onClose?: () => void;
 }
 
-export function usePaystack({ publicKey, onSuccess, onError, onClose }: UsePaystackOptions) {
+export function usePaystack({ publicKey, onSuccess, onError }: UsePaystackOptions) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<PaymentError | null>(null);
   const [paystackClient] = useState(() => new PaystackClient(publicKey));
@@ -93,13 +93,6 @@ export function usePaystack({ publicKey, onSuccess, onError, onClose }: UsePayst
 
   const processPayment = useCallback(async (paymentData: PaymentData): Promise<PaymentResult> => {
     return new Promise((resolve, reject) => {
-      const handleSuccess = (result: PaymentResult) => {
-        resolve(result);
-      };
-
-      const handleError = (error: PaymentError) => {
-        reject(error);
-      };
 
       initializePayment(paymentData)
         .then(() => {

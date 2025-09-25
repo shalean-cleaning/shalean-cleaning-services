@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -82,7 +82,7 @@ export default function CleanerPage() {
     router.back();
   };
 
-  const getInitials = (firstName: string | null, lastName: string | null) => {
+  const getInitials = (firstName: string | null | undefined, lastName: string | null | undefined) => {
     const first = firstName?.charAt(0) || '';
     const last = lastName?.charAt(0) || '';
     return `${first}${last}`.toUpperCase();

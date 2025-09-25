@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
 
 // Mock data from seed.sql for testing when Supabase is not available
@@ -117,7 +117,7 @@ const mockServices = [
   }
 ];
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Try to fetch from Supabase first
     const { data: services, error } = await supabase

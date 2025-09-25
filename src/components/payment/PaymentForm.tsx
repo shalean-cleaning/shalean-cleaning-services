@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, CreditCard, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, CreditCard, XCircle } from 'lucide-react';
 import { usePaystack } from '@/hooks/usePaystack';
 import { useBooking } from '@/providers/booking-provider';
 import { useAuth } from '@/hooks/useAuth';

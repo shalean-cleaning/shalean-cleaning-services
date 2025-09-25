@@ -7,10 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { useBooking } from '@/providers/booking-provider';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRight, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { generateServiceSlug } from '@/lib/pricing';
-import { generateMetadata, generateStaticParams } from './metadata';
 import { use } from 'react';
 
 interface Service {
@@ -78,7 +76,7 @@ export default function ServicePage({ params }: ServicePageProps) {
           <div className="text-center py-16">
             <h1 className="text-2xl font-bold mb-4">Service Not Found</h1>
             <p className="text-muted-foreground mb-6">
-              The service you're looking for doesn't exist.
+              The service you&apos;re looking for doesn&apos;t exist.
             </p>
             <Button onClick={handleBackToServices} variant="outline">
               <ArrowLeft className="mr-2 h-4 w-4" />

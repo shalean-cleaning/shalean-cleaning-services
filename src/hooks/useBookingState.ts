@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { calculatePricing, type PricingBreakdown, type Service } from '@/lib/pricing';
-import type { AuthUser } from '@/lib/auth';
 
 export interface BookingState {
   service?: Service;

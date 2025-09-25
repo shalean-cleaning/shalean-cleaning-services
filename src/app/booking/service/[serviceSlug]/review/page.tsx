@@ -13,19 +13,11 @@ import { PaymentForm } from '@/components/payment/PaymentForm';
 import { PaymentSuccess } from '@/components/payment/PaymentSuccess';
 import { formatPrice } from '@/lib/pricing';
 import type { PaymentResult, PaymentError } from '@/lib/paystack';
-import { use } from 'react';
 
-interface ServiceReviewPageProps {
-  params: Promise<{
-    serviceSlug: string;
-  }>;
-}
-
-export default function ServiceReviewPage({ params }: ServiceReviewPageProps) {
+export default function ServiceReviewPage() {
   const router = useRouter();
   const { bookingState } = useBooking();
   const { user, loading } = useAuth();
-  const resolvedParams = use(params);
   const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
 
   // Debug logging

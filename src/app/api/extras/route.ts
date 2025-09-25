@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
 
 // Mock data for service extras
@@ -69,7 +69,7 @@ const mockExtras = [
   }
 ];
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Try to fetch from Supabase first
     const { data: extras, error } = await supabase

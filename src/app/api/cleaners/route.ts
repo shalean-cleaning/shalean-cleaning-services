@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase-client';
-import { Pool } from 'pg';
 
 // Real seeded data for cleaners (from our database)
 const mockCleaners = [
@@ -150,8 +148,6 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const regionId = searchParams.get('region_id');
-    const date = searchParams.get('date');
-    const time = searchParams.get('time');
 
     console.log('Fetching cleaners for region:', regionId);
 

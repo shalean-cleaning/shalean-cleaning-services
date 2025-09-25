@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { useBooking } from '@/providers/booking-provider';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { generateServiceSlug } from '@/lib/pricing';
 

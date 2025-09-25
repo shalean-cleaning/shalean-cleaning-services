@@ -1,5 +1,3 @@
-import type { Tables } from './types';
-
 export interface Service {
   id: string;
   name: string;

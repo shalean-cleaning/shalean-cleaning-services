@@ -36,7 +36,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       phone: profile.phone,
       role: profile.role,
     };
-  } catch (error) {
+  } catch {
     // If Supabase is not available, check localStorage for mock user
     console.warn('Supabase not available, checking mock authentication');
     
@@ -55,7 +55,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       }
     }
     
-    console.error('Error getting current user:', error);
+    console.error('Error getting current user');
     return null;
   }
 }
@@ -72,7 +72,7 @@ export async function signIn(email: string, password: string) {
     }
 
     return data;
-  } catch (error) {
+  } catch {
     // If Supabase is not available, check localStorage for mock user
     console.warn('Supabase not available, using mock authentication');
     
@@ -130,7 +130,7 @@ export async function signUp(email: string, password: string, userData?: {
     }
 
     return data;
-  } catch (error) {
+  } catch {
     // If Supabase is not available, create a mock user for development
     console.warn('Supabase not available, using mock authentication');
     
@@ -163,7 +163,7 @@ export async function signOut() {
     if (error) {
       throw new Error(error.message);
     }
-  } catch (error) {
+  } catch {
     // If Supabase is not available, clear mock user from localStorage
     console.warn('Supabase not available, clearing mock authentication');
     

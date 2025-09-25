@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { AlertTriangle, XCircle } from 'lucide-react';
 import { validateConfig } from '@/lib/client-env';
 
 interface EnvironmentCheckProps {

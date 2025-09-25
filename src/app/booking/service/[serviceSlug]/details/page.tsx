@@ -1,7 +1,7 @@
 'use client';
 
 import { BookingLayout } from '@/components/booking/BookingLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,12 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useBooking } from '@/providers/booking-provider';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRight, ChevronLeft, MapPin, Home, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { generateServiceSlug } from '@/lib/pricing';
-import { generateMetadata, generateStaticParams } from './metadata';
-import { use } from 'react';
 
 interface Region {
   id: string;
@@ -35,16 +32,9 @@ interface Suburb {
   };
 }
 
-interface ServiceDetailsPageProps {
-  params: Promise<{
-    serviceSlug: string;
-  }>;
-}
-
-export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) {
+export default function ServiceDetailsPage() {
   const { bookingState, updateBookingState } = useBooking();
   const router = useRouter();
-  const resolvedParams = use(params);
   const [selectedRegionId, setSelectedRegionId] = useState<string>('');
   const [address, setAddress] = useState<string>(bookingState.address || '');
 

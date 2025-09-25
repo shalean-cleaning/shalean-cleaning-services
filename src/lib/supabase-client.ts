@@ -8,7 +8,7 @@ const createSafeSupabaseClient = () => {
   const anonKey = config.supabase.anonKey;
   
   // If environment variables are not set or empty, return a mock client
-  if (!url || !anonKey || url === '' || anonKey === '' || url === 'http://127.0.0.1:54321') {
+  if (!url || !anonKey || url === '' || anonKey === '' || url === 'http://127.0.0.1:54321' || anonKey === 'your_anon_key_here') {
     console.warn('Supabase not configured or local instance not running. Using mock client.');
     return {
       auth: {

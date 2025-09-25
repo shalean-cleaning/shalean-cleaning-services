@@ -17,7 +17,7 @@ export const config = {
 
   // Supabase configuration with fallbacks
   supabase: {
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ytitquypkuboktpypjwa.supabase.co',
     anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
   },
 

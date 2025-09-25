@@ -7,11 +7,17 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "test:supabase": "node test-supabase-connection.js",
+    "test:supabase-simple": "node test-supabase-simple.js",
+    "migrate": "node execute-migration.js",
+    "verify-migration": "node verify-migration.js",
+    "migrate-api": "node execute-migration-api.js",
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
     "supabase:status": "npx supabase status",
     "supabase:studio": "npx supabase studio",
-    "supabase:reset": "npx supabase db reset"
+    "supabase:reset": "npx supabase db reset",
+    "supabase:link": "npx supabase link --project-ref ytitquypkuboktpypjwa"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -35,6 +41,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.2",
     "lucide-react": "^0.544.0",
     "next": "15.5.4",
     "next-themes": "^0.4.6",

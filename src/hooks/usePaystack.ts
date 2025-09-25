@@ -14,11 +14,29 @@ interface UsePaystackOptions {
 export function usePaystack({ publicKey, onSuccess, onError }: UsePaystackOptions) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<PaymentError | null>(null);
-  const [paystackClient] = useState(() => new PaystackClient(publicKey));
+  const [paystackClient] = useState(() => {
+    try {
+      return new PaystackClient(publicKey);
+    } catch (err) {
+      console.error('Failed to initialize Paystack client:', err);
+      return null;
+    }
+  });
 
   const initializePayment = useCallback(async (paymentData: PaymentData): Promise<void> => {
     setIsLoading(true);
     setError(null);
+
+    if (!paystackClient) {
+      const error: PaymentError = {
+        code: 'PAYSTACK_NOT_INITIALIZED',
+        message: 'Payment system is not properly configured. Please contact support.',
+      };
+      setError(error);
+      onError?.(error);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       // Initialize payment with backend

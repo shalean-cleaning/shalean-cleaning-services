@@ -16,6 +16,12 @@ export class PaystackClient {
   private publicKey: string;
 
   constructor(publicKey: string) {
+    if (!publicKey) {
+      throw new Error('Paystack public key is required');
+    }
+    if (!publicKey.startsWith('pk_')) {
+      throw new Error('Invalid Paystack public key format. Key should start with "pk_"');
+    }
     this.publicKey = publicKey;
   }
 

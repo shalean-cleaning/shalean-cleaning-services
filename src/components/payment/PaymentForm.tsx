@@ -29,6 +29,11 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
 
   const paystackPublicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
 
+  // Check if Paystack key is configured
+  if (!paystackPublicKey) {
+    console.error('Paystack public key is not configured');
+  }
+
   const {
     initializePayment,
     formatAmount,
@@ -53,6 +58,14 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
   });
 
   const handlePayment = async () => {
+    if (!paystackPublicKey) {
+      onPaymentError({
+        code: 'MISSING_PAYSTACK_KEY',
+        message: 'Payment system is not properly configured. Please contact support.',
+      });
+      return;
+    }
+
     if (!bookingState.service) {
       onPaymentError({
         code: 'MISSING_SERVICE',

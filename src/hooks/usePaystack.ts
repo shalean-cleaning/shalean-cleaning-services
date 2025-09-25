@@ -123,18 +123,30 @@ export function usePaystack({ publicKey, onSuccess, onError }: UsePaystackOption
   }, [initializePayment]);
 
   const generateReference = useCallback(() => {
+    if (!paystackClient) {
+      throw new Error('Paystack client is not initialized');
+    }
     return paystackClient.generateReference();
   }, [paystackClient]);
 
   const formatAmount = useCallback((amount: number, currency = 'ZAR') => {
+    if (!paystackClient) {
+      throw new Error('Paystack client is not initialized');
+    }
     return paystackClient.formatAmount(amount, currency);
   }, [paystackClient]);
 
   const validateEmail = useCallback((email: string) => {
+    if (!paystackClient) {
+      throw new Error('Paystack client is not initialized');
+    }
     return paystackClient.validateEmail(email);
   }, [paystackClient]);
 
   const validateAmount = useCallback((amount: number) => {
+    if (!paystackClient) {
+      throw new Error('Paystack client is not initialized');
+    }
     return paystackClient.validateAmount(amount);
   }, [paystackClient]);
 

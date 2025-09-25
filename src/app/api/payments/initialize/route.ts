@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         .single();
       
       booking = data;
-      bookingError = error;
+      // bookingError = error; // Not used in this flow
     } catch (err) {
       // Booking doesn't exist yet, which is fine for this flow
       console.log('Booking not found in database, proceeding with payment initialization');

@@ -102,8 +102,21 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
     clearError();
 
     try {
+      // Generate a proper booking ID
+      const bookingId = `booking_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+      
+      // Format the service description for Paystack
+      const serviceDescription = `${bookingState.service.name} - ${bookingState.bedrooms} bedrooms, ${bookingState.bathrooms} bathrooms`;
+      
+      // Add extras to description if any
+      const extrasDescription = bookingState.selectedExtras.length > 0 
+        ? ` + ${bookingState.selectedExtras.map(extra => extra.name).join(', ')}`
+        : '';
+      
+      const fullDescription = serviceDescription + extrasDescription;
+
       const paymentData: PaymentData = {
-        bookingId: `booking_${Date.now()}`, // In real app, this would come from booking creation
+        bookingId,
         amount: bookingState.pricing.total,
         currency: 'ZAR',
         customerEmail: email,
@@ -111,13 +124,23 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
         customerPhone: phone,
         reference: `shalean_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
         metadata: {
-          bookingId: `booking_${Date.now()}`,
+          bookingId,
           serviceName: bookingState.service.name,
+          serviceDescription: fullDescription,
           customerId: user?.id || 'anonymous',
           cleanerId: bookingState.cleaner?.id,
-          scheduledDate: bookingState.scheduledDate?.toISOString() || '',
+          scheduledDate: bookingState.scheduledDate?.toISOString().split('T')[0] || '',
           scheduledTime: bookingState.scheduledTime || '',
           address: bookingState.address || '',
+          suburb: bookingState.suburb?.name || '',
+          region: bookingState.suburb?.region?.name || '',
+          bedrooms: bookingState.bedrooms.toString(),
+          bathrooms: bookingState.bathrooms.toString(),
+          extras: bookingState.selectedExtras.map(extra => `${extra.name} (x${extra.quantity})`).join(', '),
+          basePrice: bookingState.pricing.basePrice.toString(),
+          extrasPrice: bookingState.pricing.extrasPrice.toString(),
+          serviceFee: bookingState.pricing.serviceFee.toString(),
+          total: bookingState.pricing.total.toString(),
         },
       };
 

@@ -5,6 +5,11 @@ export interface PaystackConfig {
   currency?: string;
   reference?: string;
   metadata?: Record<string, any>;
+  custom_fields?: Array<{
+    display_name: string;
+    variable_name: string;
+    value: string;
+  }>;
   callback?: (response: PaystackResponse) => void;
   onClose?: () => void;
 }
@@ -28,11 +33,21 @@ export interface PaymentData {
   metadata: {
     bookingId: string;
     serviceName: string;
+    serviceDescription?: string;
     customerId: string;
     cleanerId?: string;
     scheduledDate: string;
     scheduledTime: string;
     address: string;
+    suburb?: string;
+    region?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+    extras?: string;
+    basePrice?: string;
+    extrasPrice?: string;
+    serviceFee?: string;
+    total?: string;
   };
 }
 

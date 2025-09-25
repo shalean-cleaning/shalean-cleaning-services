@@ -1,13 +1,15 @@
--- Seed data for Shalean booking system - South Africa
+-- Safe seed data for Shalean booking system - South Africa
+-- This script uses INSERT ... ON CONFLICT to handle existing data
 
--- Insert regions (South African provinces)
+-- Insert regions (South African provinces) - skip if exists
 INSERT INTO regions (id, name, is_active) VALUES
 ('550e8400-e29b-41d4-a716-446655440001', 'Western Cape', true),
 ('550e8400-e29b-41d4-a716-446655440002', 'Gauteng', true),
 ('550e8400-e29b-41d4-a716-446655440003', 'KwaZulu-Natal', true),
-('550e8400-e29b-41d4-a716-446655440004', 'Eastern Cape', true);
+('550e8400-e29b-41d4-a716-446655440004', 'Eastern Cape', true)
+ON CONFLICT (id) DO NOTHING;
 
--- Insert suburbs (South African cities and areas)
+-- Insert suburbs (South African cities and areas) - skip if exists
 INSERT INTO suburbs (id, name, region_id, is_active) VALUES
 -- Western Cape suburbs
 ('660e8400-e29b-41d4-a716-446655440001', 'Cape Town CBD', '550e8400-e29b-41d4-a716-446655440001', true),
@@ -34,16 +36,18 @@ INSERT INTO suburbs (id, name, region_id, is_active) VALUES
 
 -- Eastern Cape suburbs
 ('660e8400-e29b-41d4-a716-446655440018', 'Port Elizabeth', '550e8400-e29b-41d4-a716-446655440004', true),
-('660e8400-e29b-41d4-a716-446655440019', 'East London', '550e8400-e29b-41d4-a716-446655440004', true);
+('660e8400-e29b-41d4-a716-446655440019', 'East London', '550e8400-e29b-41d4-a716-446655440004', true)
+ON CONFLICT (id) DO NOTHING;
 
--- Insert service categories
+-- Insert service categories - skip if exists
 INSERT INTO service_categories (id, name, description) VALUES
 ('770e8400-e29b-41d4-a716-446655440001', 'House Cleaning', 'Complete house cleaning services'),
 ('770e8400-e29b-41d4-a716-446655440002', 'Office Cleaning', 'Professional office cleaning services'),
 ('770e8400-e29b-41d4-a716-446655440003', 'Deep Cleaning', 'Intensive deep cleaning services'),
-('770e8400-e29b-41d4-a716-446655440004', 'Post-Construction', 'Cleaning after construction or renovation');
+('770e8400-e29b-41d4-a716-446655440004', 'Post-Construction', 'Cleaning after construction or renovation')
+ON CONFLICT (id) DO NOTHING;
 
--- Insert services (South African Rand pricing)
+-- Insert services (South African Rand pricing) - skip if exists
 INSERT INTO services (id, name, description, base_price, per_bedroom_price, per_bathroom_price, duration_minutes, category_id, is_active) VALUES
 -- House Cleaning Services
 ('880e8400-e29b-41d4-a716-446655440001', 'Standard House Cleaning', 'Regular house cleaning including living areas, bedrooms, and bathrooms', 450.00, 60.00, 90.00, 120, '770e8400-e29b-41d4-a716-446655440001', true),
@@ -58,9 +62,10 @@ INSERT INTO services (id, name, description, base_price, per_bedroom_price, per_
 ('880e8400-e29b-41d4-a716-446655440006', 'Move-in/Move-out Cleaning', 'Complete cleaning for moving in or out of property', 1050.00, 120.00, 150.00, 240, '770e8400-e29b-41d4-a716-446655440003', true),
 
 -- Post-Construction Services
-('880e8400-e29b-41d4-a716-446655440007', 'Post-Construction Cleaning', 'Specialized cleaning after construction or renovation work', 1500.00, 180.00, 240.00, 360, '770e8400-e29b-41d4-a716-446655440004', true);
+('880e8400-e29b-41d4-a716-446655440007', 'Post-Construction Cleaning', 'Specialized cleaning after construction or renovation work', 1500.00, 180.00, 240.00, 360, '770e8400-e29b-41d4-a716-446655440004', true)
+ON CONFLICT (id) DO NOTHING;
 
--- Insert service extras (South African Rand pricing)
+-- Insert service extras (South African Rand pricing) - skip if exists
 INSERT INTO service_extras (id, name, description, price, is_active) VALUES
 ('990e8400-e29b-41d4-a716-446655440001', 'Window Cleaning', 'Interior and exterior window cleaning', 150.00, true),
 ('990e8400-e29b-41d4-a716-446655440002', 'Appliance Cleaning', 'Deep cleaning of kitchen appliances (oven, refrigerator, etc.)', 240.00, true),
@@ -71,7 +76,8 @@ INSERT INTO service_extras (id, name, description, price, is_active) VALUES
 ('990e8400-e29b-41d4-a716-446655440007', 'Pet Hair Removal', 'Specialized cleaning for pet hair and dander', 180.00, true),
 ('990e8400-e29b-41d4-a716-446655440008', 'Garage Cleaning', 'Cleaning and organizing garage space', 300.00, true),
 ('990e8400-e29b-41d4-a716-446655440009', 'Garden Maintenance', 'Basic garden cleaning and maintenance', 450.00, true),
-('990e8400-e29b-41d4-a716-446655440010', 'Eco-Friendly Products', 'Use of environmentally friendly cleaning products', 60.00, true);
+('990e8400-e29b-41d4-a716-446655440010', 'Eco-Friendly Products', 'Use of environmentally friendly cleaning products', 60.00, true)
+ON CONFLICT (id) DO NOTHING;
 
 -- Note: Profiles and cleaners will be created through the application when users sign up
 -- This seed file only contains the basic data needed for the application to function

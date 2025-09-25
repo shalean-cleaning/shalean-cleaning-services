@@ -68,6 +68,29 @@ export class PaystackClient {
         currency: paymentData.currency,
         reference: paymentData.reference,
         metadata: paymentData.metadata,
+        // Add custom fields for better display
+        custom_fields: [
+          {
+            display_name: "Service",
+            variable_name: "service",
+            value: paymentData.metadata.serviceDescription || paymentData.metadata.serviceName || 'Cleaning Service'
+          },
+          {
+            display_name: "Location",
+            variable_name: "location",
+            value: `${paymentData.metadata.suburb || ''}${paymentData.metadata.region ? ', ' + paymentData.metadata.region : ''}`.trim() || 'Not specified'
+          },
+          {
+            display_name: "Scheduled Date",
+            variable_name: "scheduled_date",
+            value: paymentData.metadata.scheduledDate || 'Not scheduled'
+          },
+          {
+            display_name: "Scheduled Time",
+            variable_name: "scheduled_time",
+            value: paymentData.metadata.scheduledTime || 'Not scheduled'
+          }
+        ],
         callback: (response: PaystackResponse) => {
           resolve(response);
         },

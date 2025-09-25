@@ -92,7 +92,7 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
       const paymentData: PaymentData = {
         bookingId: `booking_${Date.now()}`, // In real app, this would come from booking creation
         amount: bookingState.pricing.total,
-        currency: 'NGN',
+        currency: 'ZAR',
         customerEmail: email,
         customerName: name,
         customerPhone: phone,
@@ -165,7 +165,7 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+234 800 000 0000"
+                placeholder="+27 11 123 4567"
               />
             </div>
           </div>

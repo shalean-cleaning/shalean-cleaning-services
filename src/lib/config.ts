@@ -67,9 +67,9 @@ export const config = {
 
   // Payment configuration
   payment: {
-    currency: 'NGN',
-    minAmount: 100, // Minimum amount in kobo (1 NGN)
-    maxAmount: 100000000, // Maximum amount in kobo (1M NGN)
+    currency: 'ZAR',
+    minAmount: 100, // Minimum amount in cents (1 ZAR)
+    maxAmount: 100000000, // Maximum amount in cents (1M ZAR)
     serviceFeePercentage: 0.1, // 10% service fee
   },
 
@@ -122,7 +122,7 @@ export function getApiUrl(endpoint: string): string {
 }
 
 export function formatCurrency(amount: number, currency = config.payment.currency): string {
-  return new Intl.NumberFormat('en-NG', {
+  return new Intl.NumberFormat('en-ZA', {
     style: 'currency',
     currency,
   }).format(amount);

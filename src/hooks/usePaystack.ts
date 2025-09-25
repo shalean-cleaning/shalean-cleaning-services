@@ -108,7 +108,7 @@ export function usePaystack({ publicKey, onSuccess, onError }: UsePaystackOption
     return paystackClient.generateReference();
   }, [paystackClient]);
 
-  const formatAmount = useCallback((amount: number, currency = 'NGN') => {
+  const formatAmount = useCallback((amount: number, currency = 'ZAR') => {
     return paystackClient.formatAmount(amount, currency);
   }, [paystackClient]);
 

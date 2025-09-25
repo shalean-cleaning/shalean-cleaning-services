@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         reference,
         transactionId: transactionId || `txn_${Date.now()}`,
         amount: 0, // Amount will be calculated from booking details
-        currency: 'NGN',
+        currency: 'ZAR',
         message: 'Payment successful',
         bookingId: booking.id,
       };
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         reference,
         transactionId: transactionId || '',
         amount: 0, // Amount will be calculated from booking details
-        currency: 'NGN',
+        currency: 'ZAR',
         message: 'Payment verification failed',
         bookingId: booking.id,
       };

@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     const paymentData: PaymentData = {
       bookingId,
       amount,
-      currency: 'NGN',
+      currency: 'ZAR',
       customerEmail,
       customerName,
       customerPhone,

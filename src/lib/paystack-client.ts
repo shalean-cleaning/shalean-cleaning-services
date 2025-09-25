@@ -58,7 +58,7 @@ export class PaystackClient {
       const config: PaystackConfig = {
         publicKey: this.publicKey,
         email: paymentData.customerEmail,
-        amount: paymentData.amount * 100, // Convert to kobo (smallest currency unit)
+        amount: paymentData.amount * 100, // Convert to cents (smallest currency unit)
         currency: paymentData.currency,
         reference: paymentData.reference,
         metadata: paymentData.metadata,
@@ -85,8 +85,8 @@ export class PaystackClient {
     return `shalean_${timestamp}_${random}`;
   }
 
-  formatAmount(amount: number, currency = 'NGN'): string {
-    return new Intl.NumberFormat('en-NG', {
+  formatAmount(amount: number, currency = 'ZAR'): string {
+    return new Intl.NumberFormat('en-ZA', {
       style: 'currency',
       currency,
     }).format(amount);

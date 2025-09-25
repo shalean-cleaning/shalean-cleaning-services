@@ -32,6 +32,13 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
   // Check if Paystack key is configured
   if (!paystackPublicKey) {
     console.error('Paystack public key is not configured');
+    console.error('Environment variables:', {
+      NODE_ENV: process.env.NODE_ENV,
+      NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+      allEnvKeys: Object.keys(process.env).filter(key => key.includes('PAYSTACK'))
+    });
+  } else {
+    console.log('Paystack public key loaded:', paystackPublicKey.substring(0, 10) + '...');
   }
 
   const {
@@ -59,6 +66,10 @@ export function PaymentForm({ onPaymentSuccess, onPaymentError }: PaymentFormPro
 
   const handlePayment = async () => {
     if (!paystackPublicKey) {
+      console.error('Paystack public key is missing:', {
+        key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+        allEnvVars: Object.keys(process.env).filter(key => key.includes('PAYSTACK'))
+      });
       onPaymentError({
         code: 'MISSING_PAYSTACK_KEY',
         message: 'Payment system is not properly configured. Please contact support.',

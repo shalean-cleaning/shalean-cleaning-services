@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -258,8 +259,14 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center">
-              <div className="bg-gray-200 rounded-full w-64 h-64 mx-auto mb-4 flex items-center justify-center">
-                <span className="text-gray-500">Image Placeholder</span>
+              <div className="relative rounded-lg overflow-hidden shadow-lg mx-auto mb-4 w-64 h-64">
+                <Image
+                  src="/images/dashboard-mockup.jpg"
+                  alt="Shalean Cleaning Services user dashboard interface"
+                  width={256}
+                  height={256}
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
             <div>
